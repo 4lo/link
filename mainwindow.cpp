@@ -8,14 +8,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setWindowTitle("emoji连连看");
     grid = new QGridLayout(ui->widget);
-    drawline = new drawLine(this);
     initMap();
 }
 
 void MainWindow::initMap(){
     for (int i = 0; i < 10; i++) {
         for (int j = 0; j < 16; j++) {
-            game.rawMap[i][j] = game.totalPic++ % 10 + 1; //初始化未经打乱的棋盘
+            game.mapOfPicture[i][j] = game.pictureNumber++ % 10 + 1; //初始化未经打乱的棋盘
         }
     }
 
@@ -27,9 +26,9 @@ void MainWindow::initMap(){
             randx2 = rand() % 10;
             randy1 = rand() % 16;
             randy2 = rand() % 16;
-            int tmp = game.rawMap[randx1][randy1];
-            game.rawMap[randx1][randy1] = game.rawMap[randx2][randy2];
-            game.rawMap[randx2][randy2] = tmp;
+            int tmp = game.mapOfPicture[randx1][randy1];
+            game.mapOfPicture[randx1][randy1] = game.mapOfPicture[randx2][randy2];
+            game.mapOfPicture[randx2][randy2] = tmp;
         }
         int randomPicIndex{0};
         for (int i = 0; i < 12; i++) {
@@ -37,14 +36,14 @@ void MainWindow::initMap(){
                 if (i == 0 || i == 11 || j == 0 || j == 17) {
                     button *w = new button();
                     w->setStyleSheet("background:transparent");
-                    w->setObjectName(QString::number(i * 18 + j));
+                    w->setObjectName(QString::number(/*i * 18 + j*/ 0 ));
                     w->setMinimumSize(40, 40);
                     w->setMaximumSize(40, 40);
                     w->setParent(ui->widget);
                     grid->addWidget(w, i, j);
                     continue;
                 }
-                randomPicIndex = game.rawMap[i - 1][j - 1];
+                randomPicIndex = game.mapOfPicture[i - 1][j - 1];
                 button *pic = new button();
                 if (randomPicIndex == 0) {
                     pic->setIcon(QIcon("background:transparent"));
@@ -52,7 +51,7 @@ void MainWindow::initMap(){
                     pic->setIconSize(QSize(40, 40));
                     pic->setMinimumSize(40, 40);
                     pic->setMaximumSize(40, 40);
-                    game.map[i][j] = 0;
+                    game.mapOfAll[i][j] = 0;
                 } else {
                     pic->setIcon(QIcon(":/images/" + QString::number(randomPicIndex) + ".png"));
                     pic->setObjectName(QString::number(i * 18 + j));
@@ -60,8 +59,8 @@ void MainWindow::initMap(){
                     pic->setMinimumSize(40, 40);
                     pic->setMaximumSize(40, 40);
                     pic->setCheckable(true);
-                    connect(pic, &button::keyClicked, this, &MainWindow::link);
-                    game.map[i][j] = randomPicIndex;
+                    connect(pic, &button::keyClicked, this, &MainWindow::judge);
+                    game.mapOfAll[i][j] = randomPicIndex;
                 }
                 grid->addWidget(pic, i, j);
 
@@ -69,42 +68,39 @@ void MainWindow::initMap(){
         }
 }
 
-void MainWindow::linelink(QString pic1, QString pic2, QString p1, QString p2)
-{
-    button *ptr1 = ui->widget->findChild<button*>(pic1);
-    button *ptr2 = ui->widget->findChild<button*>(pic2);
-
-    if (game.flagA){
-        drawline->setP(0,ptr1->pos());
-        drawline->setP(1,ptr2->pos());
-        game.flagA = false;
-    }else if (game.flagB){
-        drawline->setP(0,ptr1->pos());
-        drawline->setP(1,ui->widget->findChild<button*>(p1)->pos());
-        drawline->setP(2,ptr2->pos());
-    }else if (game.flagC){
-        drawline->setP(0,ptr1->pos());
-        QWidget *tmp1{}, *tmp2{};
-        tmp1 = ui->widget->findChild<QWidget*>(p1);
-        tmp2 = ui->widget->findChild<QWidget*>(p2);
-        if (tmp1 != nullptr){
-            QPoint qp1 = tmp1->pos();
-            drawline->setP(1,qp1);
+void MainWindow::judge(const QString &msg){
+    button *btn = ui->widget->findChild<button*>(msg);
+    if (btn != nullptr){
+        if (game.pictureSelected == btn->objectName()){
+            //若连续点击同一张图片
+            btn->setChecked(false);
+            game.pictureSelected = "";
+        }else if (game.pictureSelected == ""){
+            //此次未点击图片
+            game.pictureSelected = btn->objectName();
+        }else if (game.linkWithOneLine(game.pictureSelected,btn->objectName(),true)
+                  ||game.linkWithTwoLines(game.pictureSelected,btn->objectName(),true)
+                  || game.linkWithThreeLines(game.pictureSelected,btn->objectName())){
+            //可以连接
+            button *b1 = ui->widget->findChild<button*>(game.pictureSelected);
+            button *b2 = ui->widget->findChild<button*>(btn->objectName());
+            b1->setVisible(false);
+            b2->setVisible(false);
+            b1->setStyleSheet("background:transparent");
+            b2->setStyleSheet("background:transparent");
+            game.pictureSelected = "";
+        }else{
+            button *b1 = ui->widget->findChild<button*>(game.pictureSelected);
+            b1->setChecked(false);
+            game.pictureSelected = btn->objectName();
+            btn->setChecked(true);
         }
-        if (tmp2 != nullptr){
-            QPoint qp2 = tmp1->pos();
-            drawline->setP(2,qp2);
-        }
-
     }
 }
 
-void MainWindow::link(const QString &msg){
-    QString po1{},po2{};
-//    if(linkalgorithm.link(msg,game)){
-      //  button *btn = ui->widget->findChild<button*>(msg);
-       // drawLine(game.pictureSelected,btn->objectName(),po1,po2);
-   // }
+void MainWindow::log(button *btn){
+    qDebug() << game.pictureSelected;
+    qDebug() << btn->objectName();
 }
 
 MainWindow::~MainWindow()

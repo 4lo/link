@@ -26,19 +26,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    game.cpp \
-    linkalgorithm.cpp \
-    drawline.cpp
+    game.cpp
 
 HEADERS += \
         mainwindow.h \
     button.h \
-    game.h \
-    linkalgorithm.h \
-    drawline.h
+    game.h
 
 FORMS += \
         mainwindow.ui
 
 RESOURCES += \
     images.qrc
+
+DISTFILES +=
