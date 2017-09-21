@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT       += multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -26,17 +27,26 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    game.cpp
+    game.cpp \
+    drawlinelayer.cpp \
+    inter.cpp
 
 HEADERS += \
         mainwindow.h \
     button.h \
-    game.h
+    game.h \
+    drawlinelayer.h \
+    inter.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    inter.ui
 
 RESOURCES += \
-    images.qrc
+    images.qrc \
+    characters.qrc \
+    characters.qrc \
+    music.qrc \
+    level1.qrc
 
 DISTFILES +=

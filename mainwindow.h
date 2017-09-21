@@ -1,14 +1,19 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
+#include "inter.h"
 #include <QMainWindow>
+#include <QTimer>
+#include <QTime>
 #include "game.h"
 #include "button.h"
 #include <QGridLayout>
 #include <QMessageBox>
 #include <QString>
 #include <QDebug>
-
+#include <QPainter>
+#include "drawlinelayer.h"
+#include <QMovie>
+#include <QMediaPlayer>
 namespace Ui {
 class MainWindow;
 }
@@ -19,18 +24,30 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
-    QGridLayout *grid{};
+
     void initMap();
     void judge(const QString &msg);
-
-    int PIC_NUM{10};
+    void drawLine(QString pic1, QString pic2,QString p1, QString p2);
     Game game{};
-    ~MainWindow();
-public slots:
-    void log(button *btn);//debug
+    DrawLineLayer *drawLineLayer;
+
+    ~MainWindow();   
+    Ui::MainWindow *ui;
+    void setLevel1();
+    void setLevel2();
+    void setLevel3();
+    void setLevel4();
 
 private:
-    Ui::MainWindow *ui;
+    QTimer *timer;
+    QPainter* painter;
+    QGridLayout *grid{};
+    QMediaPlayer *player1;
+public slots:
+        void bossBloodUpdater();
+        void myBloodUpdater();
+        void returnMain();
+        void goldenFinger();
 };
 
 #endif // MAINWINDOW_H

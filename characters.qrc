@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>characters/2.gif</file>
+        <file>characters/startbutton.gif</file>
+        <file>characters/3.gif</file>
+        <file>characters/kan.png</file>
+        <file>characters/lian.png</file>
+        <file>characters/huarong1.gif</file>
+    </qresource>
+</RCC>

@@ -3,6 +3,7 @@
 
 #include <QPushButton>
 #include <QTimer>
+#include <QMediaPlayer>
 
 class button : public QPushButton{
     Q_OBJECT
@@ -21,6 +22,10 @@ signals:
 public slots:
     void on_clicked(){
         emit this->keyClicked(this->objectName());
+        QMediaPlayer *player = new QMediaPlayer(this);
+        player->setMedia(QUrl("qrc:/music/click.mp3"));
+        player->setVolume(100);
+        player->play();
     }
 
 };

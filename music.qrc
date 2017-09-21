@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>music/bgm.mp3</file>
+        <file>music/click.mp3</file>
+        <file>music/linkandblink.mp3</file>
+    </qresource>
+</RCC>
