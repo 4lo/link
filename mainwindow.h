@@ -33,11 +33,6 @@ public:
 
     ~MainWindow();   
     Ui::MainWindow *ui;
-    void setLevel1();
-    void setLevel2();
-    void setLevel3();
-    void setLevel4();
-
 private:
     QTimer *timer;
     QPainter* painter;
@@ -63,14 +58,4 @@ public slots:
 0 x x x x x x x x x x 0
 0 x x x x x x x x x x 0
 0 0 0 0 0 0 0 0 0 0 0 0
-
-
-
-
-
-
-
-
-
-
 */

@@ -161,8 +161,8 @@
      <widget class="QPushButton" name="pushButton_3">
       <property name="geometry">
        <rect>
-        <x>190</x>
-        <y>240</y>
+        <x>220</x>
+        <y>230</y>
         <width>101</width>
         <height>101</height>
        </rect>
@@ -175,9 +175,26 @@
       </property>
      </widget>
     </widget>
+    <widget class="QPushButton" name="quit">
+     <property name="geometry">
+      <rect>
+       <x>660</x>
+       <y>430</y>
+       <width>91</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/images/level1/exit.png);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
     <zorder>label</zorder>
     <zorder>kan</zorder>
     <zorder>lian1</zorder>
+    <zorder>quit</zorder>
    </widget>
   </widget>
  </widget>

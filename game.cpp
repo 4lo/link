@@ -1,13 +1,13 @@
 #include "game.h"
 
 Game::Game(){
-//初始化整体游戏操作区域
+//初始化整体游戏操作区域，包括边框
     for(int i = 0; i < 12; i++)
         for(int j = 0; j < 18; j++)
             mapOfAll[i][j] = 0;
 }
 
-
+//通过数组中编号来获取图片的坐标
 void Game::getCoordinate(int &x1, int &y1, int &x2, int &y2, QString pic1, QString pic2){
     x1 = pic1.toInt() / 18;
     x2 = pic2.toInt() / 18;
@@ -15,6 +15,13 @@ void Game::getCoordinate(int &x1, int &y1, int &x2, int &y2, QString pic1, QStri
     y2 = pic2.toInt() % 18;
 }
 
+
+/*
+   d 0 d
+   x x x
+   d x x
+   用一条线连接的情况
+*/
 bool Game::linkWithOneLine(QString pic1, QString pic2, bool isThis){
     bool result{false};
     int x1{},x2{},y1{},y2{};
@@ -29,6 +36,13 @@ bool Game::linkWithOneLine(QString pic1, QString pic2, bool isThis){
     return result;
 }
 
+
+/*
+   0 0 d
+   0 x x
+   d x d
+   用两条线连接的情况
+*/
 bool Game::linkWithTwoLines(QString pic1, QString pic2,QString& p1,bool isThis){
     bool result{false};
     int x1{},x2{},y1{},y2{};
@@ -62,6 +76,13 @@ bool Game::linkWithTwoLines(QString pic1, QString pic2,QString& p1,bool isThis){
     return result;
 }
 
+
+/*
+   x 0 d
+   d 0 x
+   x x x
+   用三条线连接的情况
+*/
 bool Game::linkWithThreeLines(QString pic1, QString pic2, QString& p1, QString& p2){
     bool result{false};
     int x1{},x2{},y1{}, y2{};
@@ -83,6 +104,7 @@ bool Game::linkWithThreeLines(QString pic1, QString pic2, QString& p1, QString& 
         }
 
     }
+    //若可以消去，则清空两个按钮的ID
     if(result){
         pictureNumber -= 2;
         mapOfAll[x1][y1] = 0;
@@ -92,6 +114,8 @@ bool Game::linkWithThreeLines(QString pic1, QString pic2, QString& p1, QString& 
     return result;
 }
 
+
+//胜利判定
 bool Game::isWin(){
     if (pictureNumber == 0){
         return true;
@@ -100,6 +124,8 @@ bool Game::isWin(){
     }
 }
 
+
+//三种连接情况的基础，直线连接算法
 bool Game::couldBelinked(int x1, int y1, int x2, int y2){
     if (x1 != x2 && y1 != y2)
         return false;

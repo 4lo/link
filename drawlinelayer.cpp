@@ -43,6 +43,8 @@ void DrawLineLayer::paintEvent(QPaintEvent *)
     }
 }
 
+
+//设置四个点
 void DrawLineLayer::setPos1(QPoint pos) {
     this->pos1 = pos;
 }
@@ -59,6 +61,8 @@ void DrawLineLayer::setPos4(QPoint pos) {
     this->pos4 = pos;
 }
 
+
+//点坐标归零
 void DrawLineLayer::clear() {
     pos1.setX(0);
     pos1.setY(0);

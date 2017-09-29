@@ -7,8 +7,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    QString path1 = ":/images/";
-    path1.append(path);
     ui->setupUi(this);
     ui->bossblood->setValue(game.bossBlood);
     setWindowFlags(Qt::FramelessWindowHint);
@@ -21,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     drawLineLayer->hide();
     drawLineLayer->setGeometry(QRect(0, 0, 720, 480));
     QMovie *movie = new QMovie(":/images/" + path + "me1.gif");
-    QMovie *rw2 = new QMovie(path1 + "boss1.gif");
+    QMovie *rw2 = new QMovie(":/images/" + path + "boss1.gif");
     ui->rw->setMovie(movie);
     ui->rw->setScaledContents(true);
     ui->rw->resize(ui->widget_2->size());
@@ -120,14 +118,21 @@ void MainWindow::judge(const QString &msg){
                   || game.linkWithThreeLines(game.pictureSelected,btn->objectName(),p1,p2)){
             //可以连接
 
+            //boss血量减少和玩家的血量奖励
             game.bossBlood -= bossSpeed;
             game.myBlood += mySpeed;
 
+
+            //播放消除的声音
             QMediaPlayer *player1 = new QMediaPlayer(this);
             player1->setMedia(QUrl("qrc:/music/linkandblink.mp3"));
             player1->setVolume(100);
             player1->play();
+
+            //连线
             drawLine(game.pictureSelected,btn->objectName(),p1,p2);
+
+            //消除
             button *b1 = ui->widget->findChild<button*>(game.pictureSelected);
             button *b2 = ui->widget->findChild<button*>(btn->objectName());
             b1->setVisible(false);
@@ -135,6 +140,8 @@ void MainWindow::judge(const QString &msg){
             b1->setStyleSheet("background:transparent");
             b2->setStyleSheet("background:transparent");
             game.pictureSelected = "";
+
+            //角色动作的变化
             QMovie *movie = new QMovie(":/images/"+ path + "me2.gif");
             QMovie *movie2 = new QMovie(":/images/" + path +"me1.gif");
             ui->rw->setMovie(movie);
@@ -151,8 +158,7 @@ void MainWindow::judge(const QString &msg){
             ui->rw->setScaledContents(true);
             ui->rw->resize(ui->widget_2->size());
             movie2->start();
-
-
+            //判定boss血量，胜利条件
             if(game.bossBlood == 0){
                 QMessageBox *box = new QMessageBox(this);
                 box->setInformativeText("Congratulations！");
@@ -171,14 +177,19 @@ void MainWindow::judge(const QString &msg){
                 returnMain();
             }
         }else{
+            //将按钮进行替换，把上一个记录抹去，变为当前按下的按钮
             button *b1 = ui->widget->findChild<button*>(game.pictureSelected);
             b1->setChecked(false);
             game.pictureSelected = btn->objectName();
+            //按下
             btn->setChecked(true);
         }
     }
 }
 
+
+//类似于连接算法的画线函数
+//需要其传递过来的点的参数来进行连接
 void MainWindow::drawLine(QString pic1, QString pic2, QString pos2,QString pos3){
     button *p1 = ui->widget->findChild<button*>(pic1);
     button *p2 = ui->widget->findChild<button*>(pic2);
@@ -215,12 +226,16 @@ void MainWindow::drawLine(QString pic1, QString pic2, QString pos2,QString pos3)
     drawLineLayer->clear();
 }
 
+//boss血量和消除绑定
+//每一次消除都会进行一次 blood--； 操作
+//然后再对进度条进行下一次赋值
 void MainWindow::bossBloodUpdater(){
 
     ui->bossblood->setValue(game.bossBlood);
 
 }
 
+//回到inter主界面
 void MainWindow::returnMain()
 {
     inter *newwin = new inter();
@@ -229,6 +244,8 @@ void MainWindow::returnMain()
     this->hide();
 }
 
+//基于连连看算法的提示功能函数
+//简单粗暴，实际为从上到下遍历地图
 void MainWindow::goldenFinger(){
     QString pos2, pos3;
     QString pic1, pic2;
@@ -291,7 +308,7 @@ MainWindow::~MainWindow()
     delete grid;
 }
 
-
+//玩家血量的更新函数，通过与计时器链接，从而达到随时间减少的效果
 void MainWindow::myBloodUpdater(){
     if(game.bossBlood != 0)
         game.myBlood -= mySpeed;
